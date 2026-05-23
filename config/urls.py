@@ -35,4 +35,14 @@ urlpatterns = [
     path('lecturer/', include('apps.lecturers.urls')),
     path('examination/', include('apps.examination.urls')),
     path('finance/', include('apps.finance.urls')),
-    path('hostel/', include
+    path('hostel/', include('apps.hostel.urls')),
+    path('medical/', include('apps.medical.urls')),
+    path('library/', include('apps.library.urls')),
+    path('alumni/', include('apps.alumni.urls')),
+    path('payments/', include('apps.payments.urls')),
+    path('notifications/', include('apps.notifications.urls')),
+    path('accounts/', include('apps.accounts.urls')),
+    path('academics/', include('apps.academics.urls')),
+]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
