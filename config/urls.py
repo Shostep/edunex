@@ -1,14 +1,20 @@
-"""
-EduNex URL Configuration
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import render, redirect
+
+def landing_page(request):
+    from apps.core.models import UniversityConfig
+    config = UniversityConfig.get()
+    if not config.is_setup_complete:
+        return redirect('setup:wizard')
+    return render(request, 'landing.html', {'university': config})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.setup_wizard.urls')),
+    path('', landing_page, name='landing'),
+    path('setup/', include('apps.setup_wizard.urls')),
     path('indigene/', include('apps.indigene.urls')),
     path('apply/', include('apps.admission.urls')),
     path('student/', include('apps.students.urls')),
@@ -21,9 +27,9 @@ urlpatterns = [
     path('alumni/', include('apps.alumni.urls')),
     path('payments/', include('apps.payments.urls')),
     path('notifications/', include('apps.notifications.urls')),
+    path('accounts/', include('apps.accounts.urls')),
+    path('academics/', include('apps.academics.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    if hasattr(settings, 'MEDIA_ROOT'):
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
