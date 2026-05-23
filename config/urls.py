@@ -35,6 +35,7 @@ urlpatterns = [
     path('lecturer/', include('apps.lecturers.urls')),
     path('examination/', include('apps.examination.urls')),
     path('finance/', include('apps.finance.urls')),
+    path('hostel/', include('apps.hostel.urls')),
     path('medical/', include('apps.medical.urls')),
     path('library/', include('apps.library.urls')),
     path('alumni/', include('apps.alumni.urls')),
