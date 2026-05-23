@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - {{ university_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Sidebar -->
+            <aside class="md:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            {{ student.user.first_name|first }}{{ student.user.surname|first }}
+                        </div>
+                        <h3 class="font-bold text-gray-900">{{ student.user.full_name }}</h3>
+                        <p class="text-sm text-gray-600">{{ student.matric_number }}</p>
+                        <p class="text-sm text-gray-500">{{ student.programme.name }}</p>
+                        <p class="text-sm text-gray-500">{{ student.level }}L</p>
+                    </div>
+                </div>
+
+                <nav class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <a href="{% url 'students:dashboard' %}" class="block px-6 py-3 bg-blue-50 text-primary font-medium border-l-4 border-primary">
+                        <i class="fas fa-home mr-2"></i> Dashboard
+                    </a>
+                    <a href="{% url 'students:course_reg' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-book mr-2"></i> Course Registration
+                    </a>
+                    <a href="{% url 'students:results' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-graduation-cap mr-2"></i> Results
+                    </a>
+                    <a href="{% url 'students:fees' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-money-bill mr-2"></i> Fees & Payments
+                    </a>
+                    <a href="{% url 'students:timetable' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-calendar mr-2"></i> Timetable
+                    </a>
+                    <a href="{% url 'students:hostel' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-bed mr-2"></i> Hostel
+                    </a>
+                    <a href="{% url 'students:medical' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-heartbeat mr-2"></i> Medical
+                    </a>
+                    <a href="{% url 'students:library' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-book-reader mr-2"></i> Library
+                    </a>
+                    <a href="{% url 'students:id_card' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-id-card mr-2"></i> ID Card
+                    </a>
+                    <a href="{% url 'students:transcript' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-file-alt mr-2"></i> Transcript
+                    </a>
+                    <a href="{% url 'students:profile' %}" class="block px-6 py-3 hover:bg-gray-50 text-gray-700 border-l-4 border-transparent hover:border-gray-300">
+                        <i class="fas fa-user mr-2"></i> Profile
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="md:col-span-3">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="text-3xl font-bold text-primary">{{ student.cgpa }}</div>
+                        <div class="text-gray-600">Current CGPA</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="text-3xl font-bold text-green-600">{{ student.level }}L</div>
+                        <div class="text-gray-600">Current Level</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="text-3xl font-bold text-purple-600">{{ student.total_credits_earned }}</div>
+                        <div class="text-gray-600">Credits Earned</div>
+                    </div>
+                </div>
+
+                <!-- Notifications / Deadlines -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Upcoming Deadlines</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 bg-yellow-50 rounded-lg">
+                            <i class="fas fa-exclamation-circle text-yellow-600 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-900">Course Registration Closes Soon</p>
+                                <p class="text-sm text-gray-600">3 days remaining</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-red-50 rounded-lg">
+                            <i class="fas fa-money-bill text-red-600 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-900">Tuition Fee Payment Due</p>
+                                <p class="text-sm text-gray-600">5 days remaining</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h2>
+                    <div class="text-gray-500 text-center py-8">
+                        No recent activity to display.
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}

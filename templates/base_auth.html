@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4">
+    <div class="max-w-md w-full">
+        {% block auth_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

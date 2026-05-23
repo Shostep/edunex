@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Admission Portal - {{ university_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="container mx-auto px-4 py-16">
+        <!-- Hero -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                {{ university_name }} Admission Portal
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Your journey to academic excellence starts here. 
+                Apply, track, and secure your admission — all in one place.
+            </p>
+        </div>
+
+        <!-- Active Sessions -->
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Active Admission Sessions</h2>
+            <div class="space-y-4">
+                {% for session in sessions %}
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                {{ session.name }} — {{ session.get_session_type_display }}
+                            </h3>
+                            <p class="text-gray-600 mt-1">
+                                Closes {{ session.application_closes|date:"F d, Y" }}
+                            </p>
+                            <div class="flex gap-2 mt-3">
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                                    JAMB: {{ session.min_jamb_score }}+
+                                </span>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                    O'Level: {{ session.min_olevel_credits }} Credits
+                                </span>
+                            </div>
+                        </div>
+                        <a href="{% url 'admission:start' session.id %}" 
+                           class="px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition font-medium">
+                            Apply Now →
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-12 text-gray-500 bg-white rounded-xl">
+                    No active admission sessions at this time.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quick Status Check -->
+        <div class="max-w-md mx-auto mt-12 text-center">
+            <p class="text-gray-600 mb-4">Already applied? Check your status</p>
+            <form method="post" action="{% url 'admission:verify' %}" class="flex gap-2">
+                {% csrf_token %}
+                <input type="text" name="query" placeholder="Application Number or JAMB Reg"
+                       class="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900">
+                    Check
+                </button>
+            </form>
+        </div>
+
+        <!-- Published Lists -->
+        {% if published_lists %}
+        <div class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Published Admission Lists</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for list in published_lists %}
+                <a href="{% url 'admission:public_list' %}?list={{ list.id }}" 
+                   class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition">
+                    <h3 class="font-semibold text-gray-900">{{ list.programme.name }}</h3>
+                    <p class="text-gray-600">{{ list.get_list_type_display }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Published {{ list.published_at|date:"F d, Y" }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
