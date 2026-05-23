@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from .forms import EmailPasswordResetForm  # We'll create this
+from .forms import EmailPasswordResetForm
 
 app_name = 'accounts'
 
@@ -16,4 +16,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('create-admin/', views.create_first_admin, name='create_admin'),
+    # EMERGENCY URLs - REMOVE AFTER REGAINING ADMIN ACCESS
+    path('emergency-reset/', views.emergency_reset_admin, name='emergency_reset'),
+    path('emergency-fix-users/', views.emergency_fix_existing_users, name='emergency_fix_users'),
 ]
