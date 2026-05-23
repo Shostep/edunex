@@ -4,24 +4,36 @@
     <title>Login - EduNex</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 350px; }
+        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); width: 380px; }
         h1 { color: #1e40af; text-align: center; margin-bottom: 30px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #1e40af; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .alert { padding: 12px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #d1d5db; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #1e40af; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
         button:hover { background: #1e3a8a; }
         .links { text-align: center; margin-top: 20px; }
-        .links a { color: #1e40af; text-decoration: none; }
+        .links a { color: #1e40af; text-decoration: none; font-size: 14px; }
+        .links a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="login-box">
         <h1>EduNex Login</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
         <form method="post">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Email" required>
+            <input type="email" name="email" placeholder="Email address" required autofocus>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <button type="submit">Sign In</button>
         </form>
+        
         <div class="links">
             <a href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
         </div>
