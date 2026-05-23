@@ -5,11 +5,14 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 def custom_login(request):
+    """Custom login view using email as the username field."""
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, username=email, password=password)
+        # FIX: Use 'email=' keyword since USERNAME_FIELD = 'email'
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.email}!')
@@ -18,8 +21,9 @@ def custom_login(request):
             messages.error(request, 'Invalid email or password.')
     return render(request, 'accounts/login.html')
 
+
 def create_first_admin(request):
-    """Temporary view to create the first admin user"""
+    """Temporary view to create the first admin user."""
     # Check if any admin already exists
     if User.objects.filter(role='admin').exists():
         messages.info(request, 'Admin user already exists. Please login.')
@@ -33,19 +37,17 @@ def create_first_admin(request):
         phone = request.POST.get('phone')
         
         try:
-            # FIXED: Don't pass username=email if USERNAME_FIELD is already 'email'
-            # create_superuser expects the USERNAME_FIELD as the first argument
+            # FIX: Pass username=email since AbstractUser requires a username field
             user = User.objects.create_superuser(
-                email=email,           # This is the USERNAME_FIELD
+                email=email,           # USERNAME_FIELD
                 password=password,
                 phone=phone,
                 surname=surname,
                 first_name=first_name,
-                # Removed: username=email
+                username=email,        # REQUIRED: AbstractUser username field
             )
             user.role = 'admin'
-            user.is_staff = True
-            user.is_superuser = True
+            # create_superuser already sets is_staff=True and is_superuser=True
             user.save()
             
             messages.success(request, 'Admin account created successfully! Please login.')
