@@ -1,0 +1,58 @@
+/* EduNex Main Styles */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Smooth transitions */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Form focus states */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    ring: 2px;
+}
+
+/* Card hover effects */
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading spinner */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color, #1e40af);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Print styles for transcripts */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    .print-only {
+        display: block !important;
+    }
+}
