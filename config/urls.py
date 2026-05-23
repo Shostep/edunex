@@ -4,8 +4,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import get_user_model
+import os
+import django
 
+# Setup Django settings for model access
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+django.setup()
+
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
@@ -31,29 +37,39 @@ def landing_page(request):
 
 
 # ===================================================================
-# EMERGENCY ADMIN RESET - DELETE THIS AFTER REGAINING ACCESS
+# EMERGENCY ADMIN RESET - DELETE AFTER REGAINING ACCESS
 # ===================================================================
 
 def emergency_reset(request):
-    """Reset or create admin user. Visit /emergency/ to use."""
+    """Reset or create admin user."""
     try:
-        user = User.objects.filter(role='admin').first()
+        # Check if any admin exists
+        admin_users = User.objects.filter(role='admin')
         
-        if user:
-            # Fix existing admin
+        if admin_users.exists():
+            user = admin_users.first()
+            # Reset password and ensure username matches email
             user.username = user.email
             user.set_password('AdminPass123!')
             user.is_active = True
             user.is_staff = True
             user.is_superuser = True
             user.save()
+            
             return HttpResponse(f"""
-                <h1>✅ Admin Password Reset</h1>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Password:</strong> AdminPass123!</p>
-                <p><a href="/accounts/login/">Login Now</a></p>
-                <hr>
-                <p style="color:red"><strong>DELETE THE emergency_reset VIEW FROM config/urls.py IMMEDIATELY!</strong></p>
+                <html>
+                <head><title>Admin Reset</title></head>
+                <body style="font-family: Arial; padding: 40px; max-width: 600px; margin: 0 auto;">
+                    <h1 style="color: green;">✅ Admin Password Reset</h1>
+                    <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Password:</strong> AdminPass123!</p>
+                    </div>
+                    <p><a href="/accounts/login/" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Login Now</a></p>
+                    <hr style="margin-top: 40px;">
+                    <p style="color: red;"><strong>SECURITY WARNING:</strong> Delete the emergency_reset view from config/urls.py immediately after logging in!</p>
+                </body>
+                </html>
             """)
         else:
             # Create new admin
@@ -67,35 +83,34 @@ def emergency_reset(request):
             )
             user.role = 'admin'
             user.save()
+            
             return HttpResponse("""
-                <h1>✅ Admin Created</h1>
-                <p><strong>Email:</strong> admin@edunex.com</p>
-                <p><strong>Password:</strong> AdminPass123!</p>
-                <p><a href="/accounts/login/">Login Now</a></p>
-                <hr>
-                <p style="color:red"><strong>DELETE THE emergency_reset VIEW FROM config/urls.py IMMEDIATELY!</strong></p>
+                <html>
+                <head><title>Admin Created</title></head>
+                <body style="font-family: Arial; padding: 40px; max-width: 600px; margin: 0 auto;">
+                    <h1 style="color: green;">✅ Admin Created</h1>
+                    <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
+                        <p><strong>Email:</strong> admin@edunex.com</p>
+                        <p><strong>Password:</strong> AdminPass123!</p>
+                    </div>
+                    <p><a href="/accounts/login/" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Login Now</a></p>
+                    <hr style="margin-top: 40px;">
+                    <p style="color: red;"><strong>SECURITY WARNING:</strong> Delete the emergency_reset view from config/urls.py immediately after logging in!</p>
+                </body>
+                </html>
             """)
     except Exception as e:
-        return HttpResponse(f"<h1>❌ Error</h1><p>{str(e)}</p><p>Check database connection.</p>")
-
-
-def emergency_fix_users(request):
-    """Fix users with empty username fields. Visit /emergency-fix/ to use."""
-    try:
-        fixed = 0
-        for user in User.objects.filter(username=''):
-            user.username = user.email
-            user.save()
-            fixed += 1
+        import traceback
         return HttpResponse(f"""
-            <h1>✅ Fixed {fixed} Users</h1>
-            <p>Users with empty username fields have been updated.</p>
-            <p><a href="/accounts/login/">Go to Login</a></p>
-            <hr>
-            <p style="color:red"><strong>DELETE THIS VIEW FROM config/urls.py IMMEDIATELY!</strong></p>
+            <html>
+            <head><title>Error</title></head>
+            <body style="font-family: Arial; padding: 40px;">
+                <h1 style="color: red;">❌ Error</h1>
+                <p>{str(e)}</p>
+                <pre style="background: #f5f5f5; padding: 15px; overflow-x: auto;">{traceback.format_exc()}</pre>
+            </body>
+            </html>
         """)
-    except Exception as e:
-        return HttpResponse(f"<h1>❌ Error</h1><p>{str(e)}</p>")
 
 
 # ===================================================================
@@ -118,9 +133,8 @@ urlpatterns = [
     path('notifications/', include('apps.notifications.urls')),
     path('accounts/', include('apps.accounts.urls')),
     path('academics/', include('apps.academics.urls')),
-    # EMERGENCY URLS - REMOVE AFTER USE
-    path('emergency/', emergency_reset),
-    path('emergency-fix/', emergency_fix_users),
+    # EMERGENCY URL - REMOVE AFTER USE
+    path('emergency-reset/', emergency_reset),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
