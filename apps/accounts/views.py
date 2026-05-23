@@ -33,13 +33,15 @@ def create_first_admin(request):
         phone = request.POST.get('phone')
         
         try:
+            # FIXED: Don't pass username=email if USERNAME_FIELD is already 'email'
+            # create_superuser expects the USERNAME_FIELD as the first argument
             user = User.objects.create_superuser(
-                email=email,
+                email=email,           # This is the USERNAME_FIELD
                 password=password,
                 phone=phone,
                 surname=surname,
                 first_name=first_name,
-                username=email,  # Using email as username
+                # Removed: username=email
             )
             user.role = 'admin'
             user.is_staff = True
