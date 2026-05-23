@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Step 7 - Review | EduNex Setup</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 50px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
+        .progress-bar { width: 100%; height: 20px; background: #e5e7eb; border-radius: 10px; margin-bottom: 30px; }
+        .progress-fill { height: 100%; background: #1e40af; border-radius: 10px; width: 100%; }
+        h1 { color: #1e40af; margin-bottom: 10px; }
+        .step-info { color: #6b7280; margin-bottom: 30px; }
+        .review-box { background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .review-box ul { list-style: none; padding: 0; }
+        .review-box li { padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+        .review-box li:last-child { border-bottom: none; }
+        .btn { padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #10b981; color: white; }
+        .btn-secondary { background: #6b7280; color: white; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <h1>Review & Complete</h1>
+        <p class="step-info">Step 7 of 7</p>
+        
+        <div class="review-box">
+            <p>Please review your settings before completing the setup:</p>
+            <ul>
+                <li><strong>University Name:</strong> {{ config.name|default:"Not set" }}</li>
+                <li><strong>Short Name:</strong> {{ config.short_name|default:"Not set" }}</li>
+                <li><strong>State:</strong> {{ config.state|default:"Not set" }}</li>
+                <li><strong>Indigene Verification:</strong> {% if config.indigene_verification_required %}Enabled{% else %}Disabled{% endif %}</li>
+                <li><strong>Min JAMB Score:</strong> {{ config.min_jamb_score|default:"180" }}</li>
+                <li><strong>Acceptance Fee:</strong> ₦{{ config.acceptance_fee|default:"25000" }}</li>
+            </ul>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'setup:wizard_step' step=6 %}" class="btn btn-secondary">Previous</a>
+            <button type="submit" class="btn btn-primary">Complete Setup</button>
+        </form>
+    </div>
+</body>
+</html>
